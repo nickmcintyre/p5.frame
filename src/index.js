@@ -34,9 +34,18 @@ class AbstractEntity {
     }
   }
   
-  color(c) {
-    const cc = color(c);
-    this.elt.attribute('color', cc.toString('#rrggbb'));
+  color() {
+    let c;
+    if (arguments[0] instanceof p5.Color) {
+      c = arguments[0];
+    } else {
+      const args = [...arguments];
+      c = color(args);
+    }
+
+    this.elt.attribute('color', c.toString('#rrggbb'));
+    const a = alpha(c) / 255;
+    this.elt.attribute('opacity', a);
   }
   
   rotation(x, y, z) {
@@ -66,6 +75,10 @@ class AbstractEntity {
 
   component(component, property) {
     this.elt.attribute(component, property);
+  }
+
+  src(path) {
+    this.elt.attribute('src', path);
   }
 }
 
@@ -184,9 +197,8 @@ class Cylinder extends AbstractEntity {
     this.elt.attribute('position', `${this._position.x} ${this._position.y} ${this._position.z}`);
   }
 
-  geom(radiusBottom = 1, radiusTop = 0.8, height = 1) {
-    this.elt.attribute('radius-bottom', radiusBottom);
-    this.elt.attribute('radius-top', radiusTop);
+  geom(radius = 1, height = 1) {
+    this.elt.attribute('radius', radius);
     this.elt.attribute('height', height);
   }
 }

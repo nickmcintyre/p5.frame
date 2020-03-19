@@ -29,10 +29,10 @@ function setup() {
   bush.color('darkgreen');
   bush.geom(0.5);
 
-  pond = createCylinder(1, 0.01, 1);
+  pond = createCylinder(1, 0.05, 1);
   garden.child(pond);
   pond.color('navy');
-  pond.geom(0.5, 0.5, 0.1);
+  pond.geom(0.5, 0.01);
 }
 
 function draw() {

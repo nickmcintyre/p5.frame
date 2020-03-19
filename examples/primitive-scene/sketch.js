@@ -16,7 +16,7 @@ function setup() {
   ball.color('dodgerblue');
 
   rod = createCylinder(-3, 5, -30);
-  rod.geom(0.001, 0.001, 0.001);
+  rod.geom(0.001, 0.001);
   rod.color('chartreuse');
 
   spike = createCone(2, 0, -2);
@@ -43,10 +43,9 @@ function draw() {
   ball.position(p.x, p.y, p.z);
   donut.position(p.x, p.y, p.z);
 
-  let rb = frameCount * 0.005;
-  let rt = rb;
+  let r = frameCount * 0.001;
   let h = frameCount * 0.01;
-  rod.geom(rb, rt, h);
+  rod.geom(r, h);
   
   z = 2.5 * sin(frameCount * 360 / 200) - 5;
   sheet.position(0, 0, z);
