@@ -4,7 +4,11 @@ import * as aframe from 'aframe';
 
 class Scene {
   constructor() {
-    this.elt = createElement('a-scene');
+    if (select('a-scene') === null) {
+      this.elt = createElement('a-scene');
+    } else {
+      this.elt = select('a-scene');
+    }
   }
   
   child(entity) {
@@ -20,7 +24,7 @@ function createScene() {
 }
 
 
-class Primitive {
+class AbstractEntity {
   constructor(x = 0, y = 0, z = 0) {
     this._position = createVector(x, y, z);
     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -55,10 +59,58 @@ class Primitive {
 
     this._id = id;
   }
+
+  child(entity) {
+    this.elt.child(entity.elt);
+  }
+
+  component(component, property) {
+    this.elt.attribute(component, property);
+  }
 }
 
 
-class Box extends Primitive {
+// FIXME: In setup, children must be declared before calling other methods
+class Entity extends AbstractEntity {
+  constructor(x = 0, y = 0, z = 0) {
+    super(x, y, z);
+    this.elt = createElement('a-entity');
+    this.elt.attribute('position', `${this._position.x} ${this._position.y} ${this._position.z}`);
+  }
+}
+
+
+function createEntity(x = 0, y = 0, z = 0) {
+  const e = new Entity(x, y, z);
+  p5.prototype._scene.child(e);
+
+  return e;
+}
+
+
+class Plane extends AbstractEntity {
+  constructor(x = 0, y = 0, z = 0) {
+    super(x, y, z);
+    this.elt = createElement('a-plane');
+    this.elt.attribute('position', `${this._position.x} ${this._position.y} ${this._position.z}`);
+  }
+
+  geom(width = 1, height = 1) {
+    this.elt.attribute('width', width);
+    this.elt.attribute('height', height);
+  }
+}
+
+
+function createPlane(x = 0, y = 0, z = 0) {
+  const p = new Plane(x, y, z);
+  p5.prototype._scene.child(p);
+
+  return p;
+}
+
+
+class Box extends AbstractEntity {
   constructor(x = 0, y = 0, z = 0) {
     super(x, y, z);
     this.elt = createElement('a-box');
@@ -81,7 +133,7 @@ function createBox(x = 0, y = 0, z = 0) {
 }
 
 
-class Sphere extends Primitive {
+class Sphere extends AbstractEntity {
   constructor(x = 0, y = 0, z = 0) {
     super(x, y, z);
     this.elt = createElement('a-sphere');
@@ -102,7 +154,7 @@ function createSphere(x = 0, y = 0, z = 0) {
 }
 
 
-class Cone extends Primitive {
+class Cone extends AbstractEntity {
   constructor(x = 0, y = 0, z = 0) {
     super(x, y, z);
     this.elt = createElement('a-cone');
@@ -125,7 +177,7 @@ function createCone(x = 0, y = 0, z = 0) {
 }
 
 
-class Cylinder extends Primitive {
+class Cylinder extends AbstractEntity {
   constructor(x = 0, y = 0, z = 0) {
     super(x, y, z);
     this.elt = createElement('a-cylinder');
@@ -148,29 +200,7 @@ function createCylinder(x = 0, y = 0, z = 0) {
 }
 
 
-class Plane extends Primitive {
-  constructor(x = 0, y = 0, z = 0) {
-    super(x, y, z);
-    this.elt = createElement('a-plane');
-    this.elt.attribute('position', `${this._position.x} ${this._position.y} ${this._position.z}`);
-  }
-
-  geom(width = 1, height = 1) {
-    this.elt.attribute('width', width);
-    this.elt.attribute('height', height);
-  }
-}
-
-
-function createPlane(x = 0, y = 0, z = 0) {
-  const p = new Plane(x, y, z);
-  p5.prototype._scene.child(p);
-
-  return p;
-}
-
-
-class Torus extends Primitive {
+class Torus extends AbstractEntity {
   constructor(x = 0, y = 0, z = 0) {
     super(x, y, z);
     this.elt = createElement('a-torus');
@@ -192,13 +222,31 @@ function createTorus(x = 0, y = 0, z = 0) {
 }
 
 
+class Sky extends AbstractEntity {
+  constructor() {
+    super();
+    this.elt = createElement('a-sky');
+  }
+}
+
+
+function createSky() {
+  const s = new Sky();
+  p5.prototype._scene.child(s);
+
+  return s;
+}
+
+
 p5.prototype.createScene = createScene;
+p5.prototype.createEntity = createEntity;
+p5.prototype.createPlane = createPlane;
 p5.prototype.createBox = createBox;
 p5.prototype.createSphere = createSphere;
 p5.prototype.createCone = createCone;
 p5.prototype.createCylinder = createCylinder;
-p5.prototype.createPlane = createPlane;
 p5.prototype.createTorus = createTorus;
+p5.prototype.createSky = createSky;
 
 
 export default p5;
