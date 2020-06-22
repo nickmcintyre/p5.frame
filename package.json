@@ -1,5 +1,5 @@
 {
-  "name": "pframe",
+  "name": "p5.frame",
   "version": "0.0.1",
   "description": "A virtual reality library for p5.js built on A-Frame",
   "directories": {
