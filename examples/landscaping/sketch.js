@@ -36,6 +36,6 @@ function setup() {
 }
 
 function draw() {
-  let yRotation = 45 * sin(frameCount * 360 / 720);
-  garden.rotation(30, yRotation, 0);
+  let yRotation = PI * sin(frameCount / 100);
+  garden.rotation(0, yRotation, 0);
 }

@@ -33,7 +33,7 @@ function setup() {
 }
 
 function draw() {
-  cube.rotation(0, 0, frameCount);
+  cube.rotation(0, 0, frameCount / 100);
 
   let x = random(-0.01, 0.01);
   let y = random(0.01);
@@ -47,6 +47,6 @@ function draw() {
   let h = frameCount * 0.01;
   rod.geom(r, h);
   
-  z = 2.5 * sin(frameCount * 360 / 200) - 5;
+  z = 2.5 * sin(frameCount / 200) - 5;
   sheet.position(0, 0, z);
 }

@@ -19,7 +19,6 @@ class Scene {
 
 function createScene() {
   noCanvas();
-  angleMode(DEGREES);
   p5.prototype._scene = new Scene();
 }
 
@@ -27,6 +26,8 @@ function createScene() {
 class AbstractEntity {
   constructor(x = 0, y = 0, z = 0) {
     this._position = createVector(x, y, z);
+    this._rotation = createVector();
+    this._scale = createVector(1, 1, 1);
     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     this._id = '';
     for (let i = 0; i < 10; i += 1) {
@@ -47,9 +48,23 @@ class AbstractEntity {
     const a = alpha(c) / 255;
     this.elt.attribute('opacity', a);
   }
-  
+
   rotation(x, y, z) {
-    this.elt.attribute('rotation', `${x} ${y} ${z}`);
+    if (typeof x === 'undefined' || typeof y === 'undefined' || typeof z === 'undefined') {
+      return this._rotation;
+    }
+
+    let rx = x;
+    let ry = y;
+    let rz = z;
+    if (p5.prototype._angleMode === DEGREES) {
+      rx = radians(x);
+      ry = radians(y);
+      rz = radians(z);
+    }
+
+    this._rotation.set(rx, ry, rz);
+    this.elt.elt.object3D.rotation.set(rx, ry, rz);
   }
   
   position(x, y, z) {
@@ -58,7 +73,16 @@ class AbstractEntity {
     }
 
     this._position.set(x, y, z);
-    this.elt.attribute('position', `${this._position.x} ${this._position.y} ${this._position.z}`);
+    this.elt.elt.object3D.position.set(x, y, z);
+  }
+
+  scale(x, y, z) {
+    if (typeof x === 'undefined' || typeof y === 'undefined' || typeof z === 'undefined') {
+      return this._scale;
+    }
+
+    this._scale.set(x, y, z);
+    this.elt.elt.object3D.scale.set(x, y, z);
   }
 
   id(id) {
